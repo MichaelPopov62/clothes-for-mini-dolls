@@ -1,0 +1,27 @@
+.section {
+  background: #ffffff;
+  padding: 56px 0;
+}
+
+.inner {
+  max-width: 1126px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.title {
+  margin: 0 0 28px;
+  text-align: center;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+/* Карточки (и фото внутри них) идут в ряд с переносом */
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
