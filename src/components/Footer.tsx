@@ -12,25 +12,37 @@ const Footer = () => {
             <a
               href="https://www.instagram.com/elizavetavdovinets?igsh=MWF6ZnhwcGQzaHdzeQ=="
               className={styles.link}
+              aria-label="Instagram"
               target="_blank"
               rel="noreferrer"
             >
+              <svg className={styles.icon} aria-hidden="true">
+                <use href="/assets/icon/symbol-defs.svg#icon-instagram" />
+              </svg>
               Instagram
             </a>
             <a
               href="https://t.me/+380953451089"
               className={styles.link}
+              aria-label="Telegram"
               target="_blank"
               rel="noreferrer"
             >
+              <svg className={styles.icon} aria-hidden="true">
+                <use href="/assets/icon/symbol-defs.svg#icon-telegram" />
+              </svg>
               Telegram
             </a>
             <a
               href="https://www.facebook.com/share/1Dt5RFvcbx"
               className={styles.link}
+              aria-label="Facebook"
               target="_blank"
               rel="noreferrer"
             >
+              <svg className={styles.icon} aria-hidden="true">
+                <use href="/assets/icon/symbol-defs.svg#icon-facebook2" />
+              </svg>
               Facebook
             </a>
           </div>

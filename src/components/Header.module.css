@@ -18,10 +18,20 @@
 }
 
 .brand {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.2px;
   color: #ffffff;
+}
+
+.brand:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+  border-radius: 10px;
 }
 
 .nav {
@@ -38,5 +48,143 @@
 
 .link:hover {
   color: #f472b6;
+}
+
+.burger {
+  display: none;
+  border: 0;
+  background: transparent;
+  padding: 8px;
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.burger:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.burgerLines {
+  display: inline-block;
+  width: 22px;
+  height: 16px;
+  position: relative;
+}
+
+.burgerLines::before,
+.burgerLines::after,
+.burgerLines {
+  background: transparent;
+}
+
+.burgerLines::before,
+.burgerLines::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+.burgerLines::before {
+  top: 0;
+  box-shadow: 0 7px 0 0 currentColor;
+}
+
+.burgerLines::after {
+  bottom: 0;
+}
+
+.mobileMenu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #111827;
+  color: #ffffff;
+  display: flex;
+}
+
+.mobileMenuInner {
+  width: 100%;
+  padding: 18px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.mobileLogo {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.mobileLogo:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.mobileNav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.mobileLink {
+  width: min(320px, 100%);
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.mobileLink:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mobileLink:active {
+  transform: translateY(1px);
+}
+
+.mobileLink:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .inner {
+    padding: 10px 12px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .brand {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 

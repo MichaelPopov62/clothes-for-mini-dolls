@@ -10,18 +10,74 @@
 }
 
 .title {
-  margin: 0 0 28px;
+  margin: 0 0 24px;
   text-align: center;
   font-size: 28px;
   line-height: 1.1;
+  /* Секция всегда на белом фоне; глобальный h2 в тёмной теме светлый — задаём явный контраст */
+  color: #111827;
+  font-weight: 800;
 }
 
-/* Карточки (и фото внутри них) идут в ряд с переносом */
-.list {
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.tab,
+.tabActive {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.tab:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.tab:focus-visible {
+  outline: 2px solid #db2777;
+  outline-offset: 2px;
+}
+
+.tabActive {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+
+.panel {
+  min-height: 120px;
+}
+
+.empty {
+  margin: 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 16px;
+  padding: 32px 16px;
+}
+
+/* Все карточки категории сразу: сетка с переносом, прокрутка страницы */
+.grid {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: stretch;
   gap: 20px;
 }
-

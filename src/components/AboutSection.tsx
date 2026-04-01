@@ -5,7 +5,7 @@ const AboutSection = () => {
     <section id="about" className={styles.section}>
       <div className={styles.avatar}>
         <img
-          src="/images/master/master-1.webp"
+          src="/images/products/master/master-1.webp"
           alt="Мастер"
           className={styles.avatarImg}
         />

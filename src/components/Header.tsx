@@ -1,22 +1,105 @@
 import styles from "./Header.module.css";
+import { useEffect, useMemo, useState } from "react";
+
+const useMediaQuery = (query: string) => {
+  const getMatches = () =>
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false;
+
+  const [matches, setMatches] = useState(getMatches);
+
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = () => setMatches(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, [query]);
+
+  return matches;
+};
 
 const Header = () => {
+  const isMobile = useMediaQuery("(max-width: 480px)");
+  const [menuOpen, setMenuOpen] = useState(() => isMobile);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, menuOpen]);
+
+  const links = useMemo(
+    () => [
+      { href: "#about", label: "О мастере" },
+      { href: "#catalog", label: "Изделия" },
+      { href: "#contacts", label: "Контакты" },
+    ],
+    [],
+  );
+
+  const onLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isMobile) setMenuOpen(true);
+  };
+
+  const onNavClick = () => {
+    if (isMobile) setMenuOpen(false);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <div className={styles.brand}>MiniModa Studio</div>
-        <nav className={styles.nav}>
-          <a href="#about" className={styles.link}>
-            О мастере
-          </a>
-          <a href="#catalog" className={styles.link}>
-            Изделия
-          </a>
-          <a href="#contacts" className={styles.link}>
-            Контакты
-          </a>
+        <button type="button" className={styles.brand} onClick={onLogoClick}>
+          MiniModa Studio
+        </button>
+
+        <nav className={styles.nav} aria-label="Навигация">
+          {links.map((l) => (
+            <a key={l.href} href={l.href} className={styles.link}>
+              {l.label}
+            </a>
+          ))}
         </nav>
+
+        <button
+          type="button"
+          className={styles.burger}
+          aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={styles.burgerLines} aria-hidden="true" />
+        </button>
       </div>
+
+      {isMobile && menuOpen && (
+        <div className={styles.mobileMenu} role="dialog" aria-label="Меню">
+          <div className={styles.mobileMenuInner}>
+            <button
+              type="button"
+              className={styles.mobileLogo}
+              onClick={onLogoClick}
+            >
+              MiniModa Studio
+            </button>
+
+            <nav className={styles.mobileNav} aria-label="Навигация">
+              {links.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className={styles.mobileLink}
+                  onClick={onNavClick}
+                >
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

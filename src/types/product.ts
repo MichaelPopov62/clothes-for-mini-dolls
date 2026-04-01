@@ -4,5 +4,5 @@ export type Product = {
   price: string;
   description: string;
   image: string;
+  category: "women" | "men" | "couples";
 };
-
