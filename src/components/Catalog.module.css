@@ -1,19 +1,21 @@
+/* Mobile-first: от 320px */
+
 .section {
   background: #ffffff;
-  padding: 56px 0;
+  padding: 36px 0;
 }
 
 .inner {
   max-width: 1126px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 12px;
 }
 
 .title {
-  margin: 0 0 24px;
+  margin: 0 0 18px;
   text-align: center;
-  font-size: 28px;
-  line-height: 1.1;
+  font-size: 22px;
+  line-height: 1.15;
   /* Секция всегда на белом фоне; глобальный h2 в тёмной теме светлый — задаём явный контраст */
   color: #111827;
   font-weight: 800;
@@ -23,8 +25,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 28px;
+  gap: 8px;
+  margin-bottom: 22px;
 }
 
 .tab,
@@ -32,9 +34,9 @@
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   color: #374151;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  padding: 10px 18px;
+  padding: 9px 14px;
   border-radius: 999px;
   cursor: pointer;
   transition:
@@ -61,23 +63,232 @@
 }
 
 .panel {
-  min-height: 120px;
+  min-height: 100px;
 }
 
 .empty {
   margin: 0;
   text-align: center;
   color: #6b7280;
-  font-size: 16px;
-  padding: 32px 16px;
+  font-size: 15px;
+  padding: 28px 12px;
 }
 
-/* Все карточки категории сразу: сетка с переносом, прокрутка страницы */
 .grid {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
-  gap: 20px;
+  gap: 16px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.pageChips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pageChip,
+.pageChipActive,
+.pageArrow {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-weight: 800;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 80ms ease,
+    opacity 150ms ease;
+}
+
+.pageChip,
+.pageChipActive {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.pageArrow {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageChip:hover,
+.pageArrow:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.pageChip:active,
+.pageArrow:active {
+  transform: translateY(1px);
+}
+
+.pageChip:focus-visible,
+.pageArrow:focus-visible {
+  outline: 2px solid #db2777;
+  outline-offset: 2px;
+}
+
+.pageChipActive {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+
+.pageArrow:disabled,
+.pageChip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ellipsis {
+  color: #6b7280;
+  font-weight: 900;
+  padding: 0 4px;
+}
+
+.toTop {
+  display: block;
+  margin: 12px auto 0;
+  border: 2px solid rgba(219, 39, 119, 0.35);
+  background: #111827;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 9px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 80ms ease,
+    color 150ms ease;
+}
+
+.toTop:hover {
+  background: #fff7fb;
+  color: #111827;
+  border-color: rgba(219, 39, 119, 0.55);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.14);
+}
+
+.toTop:active {
+  transform: translateY(1px);
+}
+
+.toTop:focus-visible {
+  outline: 2px solid #db2777;
+  outline-offset: 2px;
+}
+
+@media (min-width: 480px) {
+  .section {
+    padding: 44px 0;
+  }
+
+  .inner {
+    padding: 0 16px;
+  }
+
+  .title {
+    font-size: 25px;
+    margin: 0 0 22px;
+  }
+
+  .tabs {
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+
+  .tab,
+  .tabActive {
+    font-size: 15px;
+    padding: 10px 18px;
+  }
+
+  .empty {
+    font-size: 16px;
+    padding: 32px 16px;
+  }
+
+  .grid {
+    gap: 18px;
+  }
+
+  .pagination {
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .pageChips {
+    gap: 8px;
+  }
+
+  .pageChip,
+  .pageChipActive {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+
+  .pageArrow {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .toTop {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 56px 0;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 1.1;
+    margin: 0 0 24px;
+  }
+
+  .tabs {
+    margin-bottom: 28px;
+  }
+
+  .panel {
+    min-height: 120px;
+  }
+
+  .grid {
+    gap: 20px;
+  }
 }

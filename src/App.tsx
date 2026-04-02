@@ -7,17 +7,12 @@ import Catalog from "./components/Catalog";
 import ProductModal from "./components/ProductModal";
 import Footer from "./components/Footer";
 import styles from "./App.module.css";
-import collageUrl from "./assets/images/collage.png?url";
 
 const App = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   return (
     <div className={styles.app}>
-      <div className={styles.bg} aria-hidden="true">
-        <img className={styles.bgContain} src={collageUrl} alt="" />
-        <div className={styles.bgOverlay} />
-      </div>
       <Header />
       <main className={styles.main}>
         <AboutSection />
@@ -26,6 +21,7 @@ const App = () => {
       <Footer />
       {selectedProduct && (
         <ProductModal
+          key={selectedProduct.id}
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
         />

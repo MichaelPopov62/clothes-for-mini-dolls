@@ -1,15 +1,51 @@
+/* Mobile-first: коллаж на всю ширину окна; контент в .inner ограничен по ширине */
+
 .section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bgImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   max-width: 1126px;
   margin: 0 auto;
-  padding: 56px 16px;
+  padding: 36px 12px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  text-align: center;
 }
 
 .avatar {
-  width: 224px;
-  height: 224px;
+  width: 160px;
+  height: 160px;
   flex: 0 0 auto;
   border-radius: 999px;
   background: #e5e7eb;
@@ -37,31 +73,29 @@
 
 .content {
   max-width: 720px;
-  text-align: left;
+  text-align: center;
 }
 
 .title {
-  margin: 0 0 12px;
-  font-size: 28px;
-  line-height: 1.1;
+  margin: 0 0 10px;
+  font-size: 22px;
+  line-height: 1.15;
   font-weight: 800;
+  color: #f9fafb;
 }
 
 .text {
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.55;
   color: #e5e7eb;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-
-
 }
 
-@media (max-width: 768px) {
-  .section {
-    flex-direction: column;
-    text-align: center;
-    padding: 36px 16px;
+@media (min-width: 480px) {
+  .inner {
+    padding: 40px 16px;
+    gap: 22px;
   }
 
   .avatar {
@@ -69,7 +103,41 @@
     height: 200px;
   }
 
+  .title {
+    font-size: 26px;
+  }
+
+  .text {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 769px) {
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 56px 16px;
+    gap: 24px;
+  }
+
+  .avatar {
+    width: 224px;
+    height: 224px;
+  }
+
   .content {
-    text-align: center;
+    text-align: left;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 1.1;
+    margin: 0 0 12px;
+  }
+
+  .text {
+    font-size: 18px;
+    line-height: 1.6;
   }
 }

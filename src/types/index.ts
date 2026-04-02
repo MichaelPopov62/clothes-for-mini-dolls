@@ -17,3 +17,8 @@ export type ProductModalProps = {
   onClose: () => void;
 };
 
+export type ProductOrderFormProps = {
+  product: Product;
+  onBack: () => void;
+};
+

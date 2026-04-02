@@ -1,3 +1,5 @@
+/* Mobile-first: база от 320px — колонка, контент по центру */
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -5,20 +7,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 12px;
   z-index: 50;
   box-sizing: border-box;
 }
 
 .modal {
   position: relative;
-  width: min(900px, 100%);
-  max-height: min(90svh, 900px);
+  width: 100%;
+  max-width: 100%;
+  max-height: min(92svh, 900px);
   background: #ffffff;
   border-radius: 18px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
 }
@@ -40,63 +44,146 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
-.imageWrap {
-  flex: 0 0 50%;
+.mainRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 44px 12px 20px;
+  box-sizing: border-box;
+}
+
+.mediaCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
   min-width: 0;
-  min-height: 0;
+  align-items: center;
+}
+
+.thumb {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  padding: 16px;
+  width: 100%;
+  max-width: 280px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(17, 24, 39, 0.1);
+  border-radius: 12px;
+  padding: 8px;
   box-sizing: border-box;
+  max-height: 220px;
+  min-height: 0;
 }
 
 .image {
   max-width: 100%;
-  max-height: min(75svh, 640px);
+  max-height: 200px;
   width: auto;
   height: auto;
   object-fit: contain;
   display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(17, 24, 39, 0.1);
+  cursor: pointer;
 }
 
-.content {
-  padding: 28px;
-  text-align: left;
+.video {
+  max-width: 100%;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: 0 4px 18px rgba(17, 24, 39, 0.1);
+}
+
+.noVideo {
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: rgba(243, 244, 246, 0.9);
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.moreVideos {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.moreVideoLink {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+}
+
+.moreVideoLink:hover {
+  background: #f3f4f6;
+}
+
+.textCol {
   flex: 1 1 auto;
   min-width: 0;
-  overflow-y: auto;
-  align-self: stretch;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
   margin: 0 0 8px;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   color: #111827;
+  line-height: 1.2;
 }
 
 .price {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   color: #db2777;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
 }
 
 .description {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   color: #4b5563;
-  line-height: 1.6;
+  line-height: 1.55;
+  font-size: 15px;
 }
 
 .button {
+  align-self: center;
   border: none;
   background: #db2777;
   color: #ffffff;
   padding: 10px 18px;
   border-radius: 999px;
   cursor: pointer;
+  font-weight: 800;
   transition: background 150ms ease;
 }
 
@@ -104,27 +191,66 @@
   background: #be185d;
 }
 
-@media (max-width: 768px) {
+.button:focus-visible {
+  outline: 2px solid #db2777;
+  outline-offset: 2px;
+}
+
+/* От 768px: два столбца, текст слева, узкая колонка медиа */
+@media (min-width: 768px) {
+  .overlay {
+    padding: 16px;
+  }
+
   .modal {
+    width: min(720px, 100%);
+    max-height: min(90svh, 900px);
+  }
+
+  .mainRow {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 52px 24px 24px;
+  }
+
+  .mediaCol {
+    flex: 0 0 200px;
+    width: auto;
+    align-items: stretch;
+  }
+
+  .thumb {
+    max-width: none;
+    max-height: 200px;
+  }
+
+  .image,
+  .video {
+    max-height: 180px;
+  }
+
+  .moreVideos {
     flex-direction: column;
-    max-height: min(92svh, 900px);
-    overflow-y: auto;
-  }
-
-  .imageWrap {
-    flex: 0 0 auto;
+    align-items: stretch;
     width: 100%;
-    max-height: min(48svh, 420px);
-    padding: 12px;
+    justify-content: flex-start;
   }
 
-  .image {
-    max-height: min(44svh, 400px);
+  .textCol {
+    text-align: left;
+    align-items: stretch;
   }
 
-  .content {
-    padding: 20px;
-    flex: 1 1 auto;
-    overflow-y: visible;
+  .title {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 18px;
+  }
+
+  .button {
+    align-self: flex-start;
   }
 }

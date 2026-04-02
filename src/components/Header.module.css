@@ -1,3 +1,5 @@
+/* Mobile-first: от 320px — бургер, компактная шапка */
+
 .header {
   position: sticky;
   top: 0;
@@ -10,11 +12,11 @@
 .inner {
   max-width: 1126px;
   margin: 0 auto;
-  padding: 16px 16px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
 .brand {
@@ -22,8 +24,8 @@
   background: transparent;
   padding: 0;
   cursor: pointer;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   letter-spacing: 0.2px;
   color: #ffffff;
 }
@@ -35,7 +37,7 @@
 }
 
 .nav {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -51,7 +53,9 @@
 }
 
 .burger {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   background: transparent;
   padding: 8px;
@@ -167,24 +171,23 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 480px) {
+/* От 481px: горизонтальная навигация, бургер скрыт */
+@media (min-width: 481px) {
   .inner {
-    padding: 10px 12px;
-  }
-
-  .nav {
-    display: none;
+    padding: 16px 16px;
+    gap: 16px;
   }
 
   .brand {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .nav {
+    display: flex;
   }
 
   .burger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: none;
   }
 }
-

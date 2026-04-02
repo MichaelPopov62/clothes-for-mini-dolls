@@ -1,5 +1,6 @@
 import styles from "./Header.module.css";
 import { useEffect, useMemo, useState } from "react";
+import { smoothScrollToId } from "../utils/scroll";
 
 const useMediaQuery = (query: string) => {
   const getMatches = () =>
@@ -48,6 +49,14 @@ const Header = () => {
     if (isMobile) setMenuOpen(false);
   };
 
+  const onAnchorClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!href.startsWith("#")) return;
+    e.preventDefault();
+    const id = href.slice(1);
+    smoothScrollToId(id);
+    onNavClick();
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -57,7 +66,12 @@ const Header = () => {
 
         <nav className={styles.nav} aria-label="Навигация">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className={styles.link}>
+            <a
+              key={l.href}
+              href={l.href}
+              className={styles.link}
+              onClick={onAnchorClick(l.href)}
+            >
               {l.label}
             </a>
           ))}
@@ -91,7 +105,7 @@ const Header = () => {
                   key={l.href}
                   href={l.href}
                   className={styles.mobileLink}
-                  onClick={onNavClick}
+                  onClick={onAnchorClick(l.href)}
                 >
                   {l.label}
                 </a>
