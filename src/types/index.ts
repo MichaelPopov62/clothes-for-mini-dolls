@@ -30,14 +30,15 @@ export type ProductOrderFormProps = {
 export type ProductCheckoutFormProps = {
   product: Product;
   onBack: () => void;
-  settlement: string;
-  onSettlementChange: (value: string) => void;
+  clientName: string;
+  onClientNameChange: (value: string) => void;
   phone: string;
   onPhoneChange: (value: string) => void;
   email: string;
   onEmailChange: (value: string) => void;
   agreed: boolean;
   onAgreedChange: (value: boolean) => void;
-  onSubmitOrder: () => void;
+  /** После успешной отправки модалка закрывается в родителе; при ошибке — throw или rejected Promise */
+  onSubmitOrder: () => void | Promise<void>;
 };
 

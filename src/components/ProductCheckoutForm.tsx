@@ -1,13 +1,14 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import type { ProductCheckoutFormProps } from "../types";
+import { validateClientName, validateEmail, validatePhone } from "../utils/formValidation";
 import styles from "./ProductCheckoutForm.module.css";
 
 /** Контакты и согласие перед отправкой заказа */
 const ProductCheckoutForm = ({
   product,
   onBack,
-  settlement,
-  onSettlementChange,
+  clientName,
+  onClientNameChange,
   phone,
   onPhoneChange,
   email,
@@ -16,9 +17,52 @@ const ProductCheckoutForm = ({
   onAgreedChange,
   onSubmitOrder,
 }: ProductCheckoutFormProps) => {
-  const handleSubmit = (e: FormEvent) => {
+  const [touched, setTouched] = useState({
+    clientName: false,
+    phone: false,
+    email: false,
+  });
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const nameError = validateClientName(clientName);
+  const phoneError = validatePhone(phone);
+  const emailError = validateEmail(email);
+
+  const showNameError = (touched.clientName || submitAttempted) && nameError;
+  const showPhoneError = (touched.phone || submitAttempted) && phoneError;
+  const showEmailError = (touched.email || submitAttempted) && emailError;
+
+  const nameOk =
+    (touched.clientName || submitAttempted) && !nameError && clientName.trim().length > 0;
+  const phoneOk = (touched.phone || submitAttempted) && !phoneError && phone.trim().length > 0;
+  const emailOk = (touched.email || submitAttempted) && !emailError && email.trim().length > 0;
+
+  const inputClass = (hasError: boolean, ok: boolean) => {
+    if (hasError) return `${styles.fieldInput} ${styles.fieldInputError}`;
+    if (ok) return `${styles.fieldInput} ${styles.fieldInputValid}`;
+    return styles.fieldInput;
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    onSubmitOrder();
+    setSubmitAttempted(true);
+    setSubmitError(null);
+    if (nameError || phoneError || emailError) return;
+    if (!agreed) return;
+    setIsSubmitting(true);
+    try {
+      await Promise.resolve(onSubmitOrder());
+    } catch (err) {
+      const msg =
+        err instanceof Error && err.message.length > 0
+          ? err.message
+          : "Не удалось отправить заказ. Попробуйте позже.";
+      setSubmitError(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -28,62 +72,95 @@ const ProductCheckoutForm = ({
         ← Назад к оформлению заказа
       </button>
 
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th scope="col">Адрес: населённый пункт</th>
+                <th scope="col">Имя</th>
                 <th scope="col">Телефон клиента</th>
                 <th scope="col">E-mail клиента</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td data-label="Адрес: населённый пункт">
-                  <label className={styles.visuallyHidden} htmlFor="checkout-settlement">
-                    Адрес клиента, населённый пункт
+                <td data-label="Имя">
+                  <label className={styles.visuallyHidden} htmlFor="checkout-client-name">
+                    Имя клиента
                   </label>
-                  <input
-                    id="checkout-settlement"
-                    className={styles.fieldInput}
-                    type="text"
-                    name="settlement"
-                    autoComplete="address-level2"
-                    required
-                    value={settlement}
-                    onChange={(e) => onSettlementChange(e.target.value)}
-                  />
+                  <div className={styles.fieldCell}>
+                    <input
+                      id="checkout-client-name"
+                      className={inputClass(!!showNameError, nameOk)}
+                      type="text"
+                      name="clientName"
+                      autoComplete="name"
+                      value={clientName}
+                      onChange={(e) => onClientNameChange(e.target.value)}
+                      onBlur={() => {
+                        onClientNameChange(clientName.trim().replace(/\s+/g, " "));
+                        setTouched((p) => ({ ...p, clientName: true }));
+                      }}
+                    />
+                    {showNameError ? (
+                      <span className={styles.fieldError} role="alert">
+                        {nameError}
+                      </span>
+                    ) : null}
+                  </div>
                 </td>
                 <td data-label="Телефон клиента">
                   <label className={styles.visuallyHidden} htmlFor="checkout-phone">
                     Телефон клиента
                   </label>
-                  <input
-                    id="checkout-phone"
-                    className={styles.fieldInput}
-                    type="tel"
-                    name="phone"
-                    autoComplete="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => onPhoneChange(e.target.value)}
-                  />
+                  <div className={styles.fieldCell}>
+                    <input
+                      id="checkout-phone"
+                      className={inputClass(!!showPhoneError, phoneOk)}
+                      type="tel"
+                      name="phone"
+                      inputMode="numeric"
+                      autoComplete="tel"
+                      value={phone}
+                      onChange={(e) =>
+                        onPhoneChange(e.target.value.replace(/\D/g, "").slice(0, 15))
+                      }
+                      onBlur={() => {
+                        onPhoneChange(phone.trim());
+                        setTouched((p) => ({ ...p, phone: true }));
+                      }}
+                    />
+                    {showPhoneError ? (
+                      <span className={styles.fieldError} role="alert">
+                        {phoneError}
+                      </span>
+                    ) : null}
+                  </div>
                 </td>
                 <td data-label="E-mail клиента">
                   <label className={styles.visuallyHidden} htmlFor="checkout-email">
                     E-mail клиента
                   </label>
-                  <input
-                    id="checkout-email"
-                    className={styles.fieldInput}
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => onEmailChange(e.target.value)}
-                  />
+                  <div className={styles.fieldCell}>
+                    <input
+                      id="checkout-email"
+                      className={inputClass(!!showEmailError, emailOk)}
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => onEmailChange(e.target.value)}
+                      onBlur={() => {
+                        onEmailChange(email.trim());
+                        setTouched((p) => ({ ...p, email: true }));
+                      }}
+                    />
+                    {showEmailError ? (
+                      <span className={styles.fieldError} role="alert">
+                        {emailError}
+                      </span>
+                    ) : null}
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -97,15 +174,27 @@ const ProductCheckoutForm = ({
             type="checkbox"
             checked={agreed}
             onChange={(e) => onAgreedChange(e.target.checked)}
-            required
           />
-          <label className={styles.checkboxLabel} htmlFor="checkout-agreed">
-            Ознакомлен с товаром «{product.title}», его описанием и свойствами
-          </label>
+          <div className={styles.checkboxLabelWrap}>
+            <label className={styles.checkboxLabel} htmlFor="checkout-agreed">
+              Ознакомлен с товаром «{product.title}», его описанием и свойствами
+            </label>
+            {submitAttempted && !agreed ? (
+              <span className={styles.fieldError} role="alert">
+                Подтвердите ознакомление с товаром
+              </span>
+            ) : null}
+          </div>
         </div>
 
-        <button type="submit" className={styles.submitButton}>
-          Отправить заказ
+        {submitError ? (
+          <p className={styles.submitError} role="alert">
+            {submitError}
+          </p>
+        ) : null}
+
+        <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+          {isSubmitting ? "Отправка…" : "Отправить заказ"}
         </button>
       </form>
     </div>

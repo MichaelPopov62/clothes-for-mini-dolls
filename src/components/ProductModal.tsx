@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { ProductModalProps } from "../types";
+import { formatPriceUah } from "@/utils";
+import { validateOrderQuantity } from "../utils/formValidation";
 import ProductCheckoutForm from "./ProductCheckoutForm";
 import ProductOrderForm from "./ProductOrderForm";
 import styles from "./ProductModal.module.css";
@@ -10,14 +12,14 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const primaryVideo = product.videos?.[0];
   const [step, setStep] = useState<ModalStep>("details");
   const [orderQuantityText, setOrderQuantityText] = useState("1");
-  const [checkoutSettlement, setCheckoutSettlement] = useState("");
+  const [checkoutClientName, setCheckoutClientName] = useState("");
   const [checkoutPhone, setCheckoutPhone] = useState("");
   const [checkoutEmail, setCheckoutEmail] = useState("");
   const [checkoutAgreed, setCheckoutAgreed] = useState(false);
 
   const resetAllDrafts = () => {
     setOrderQuantityText("1");
-    setCheckoutSettlement("");
+    setCheckoutClientName("");
     setCheckoutPhone("");
     setCheckoutEmail("");
     setCheckoutAgreed(false);
@@ -33,7 +35,52 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     setStep("checkout");
   };
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = async () => {
+    const qtyErr = validateOrderQuantity(orderQuantityText);
+    if (qtyErr) {
+      throw new Error("Некорректное количество в заказе.");
+    }
+    const quantity = parseInt(orderQuantityText.trim(), 10);
+    const lineTotalFormatted = formatPriceUah(product.priceAmount * quantity);
+
+    const url = import.meta.env.VITE_ORDER_API_URL ?? "/api/send-order";
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: product.id,
+          productTitle: product.title,
+          priceLabel: product.price,
+          quantity,
+          lineTotalFormatted,
+          clientName: checkoutClientName.trim(),
+          phone: checkoutPhone.trim(),
+          email: checkoutEmail.trim(),
+        }),
+      });
+    } catch {
+      throw new Error(
+        "Сервер недоступен. Для локальной проверки используйте npm run dev:vercel или задайте VITE_ORDER_API_URL.",
+      );
+    }
+
+    let data: { success?: boolean; message?: string } = {};
+    try {
+      data = (await res.json()) as typeof data;
+    } catch {
+      /* ответ не JSON */
+    }
+
+    if (!res.ok || data.success !== true) {
+      throw new Error(
+        typeof data.message === "string" && data.message.length > 0
+          ? data.message
+          : "Не удалось отправить заказ. Попробуйте позже.",
+      );
+    }
+
     resetAllDrafts();
     onClose();
   };
@@ -118,8 +165,8 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
           <ProductCheckoutForm
             product={product}
             onBack={() => setStep("order")}
-            settlement={checkoutSettlement}
-            onSettlementChange={setCheckoutSettlement}
+            clientName={checkoutClientName}
+            onClientNameChange={setCheckoutClientName}
             phone={checkoutPhone}
             onPhoneChange={setCheckoutPhone}
             email={checkoutEmail}
