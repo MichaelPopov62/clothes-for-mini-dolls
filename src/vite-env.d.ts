@@ -1,10 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /**
-   * Полный https-URL к API (только для `npm run dev` без vercel dev).
-   * Не используйте localhost в значении при `vite build` для продакшена — попадёт в бандл и сломает заказы.
-   */
+  /** Полный URL к API заказа для локального `npm run dev` без vercel dev */
   readonly VITE_ORDER_API_URL?: string;
 }
 

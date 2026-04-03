@@ -8,29 +8,6 @@ import styles from "./ProductModal.module.css";
 
 type ModalStep = "details" | "order" | "checkout";
 
-/**
- * URL API заказа. По умолчанию тот же origin (`/api/send-order` на Vercel).
- * VITE_ORDER_API_URL вшивается в бандл при сборке: если там localhost, в production
- * браузер пользователя ходит на его же localhost — заказ никогда не уйдёт; в prod такое игнорируем.
- */
-function resolveOrderApiUrl(): string {
-  const raw = import.meta.env.VITE_ORDER_API_URL?.trim();
-  if (raw && /^https?:\/\//i.test(raw)) {
-    if (import.meta.env.PROD) {
-      try {
-        const host = new URL(raw).hostname;
-        if (host === "localhost" || host === "127.0.0.1") {
-          return "/api/send-order";
-        }
-      } catch {
-        return "/api/send-order";
-      }
-    }
-    return raw;
-  }
-  return "/api/send-order";
-}
-
 const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const primaryVideo = product.videos?.[0];
   const [step, setStep] = useState<ModalStep>("details");
@@ -66,7 +43,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     const quantity = parseInt(orderQuantityText.trim(), 10);
     const lineTotalFormatted = formatPriceUah(product.priceAmount * quantity);
 
-    const url = resolveOrderApiUrl();
+    const url = import.meta.env.VITE_ORDER_API_URL ?? "/api/send-order";
     let res: Response;
     try {
       res = await fetch(url, {

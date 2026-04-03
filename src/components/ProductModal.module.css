@@ -29,6 +29,7 @@
   box-sizing: border-box;
   /* iPhone: нижняя прокрутка не уезжает под индикатор «домой» */
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  touch-action: pan-y;
 }
 
 .close {
