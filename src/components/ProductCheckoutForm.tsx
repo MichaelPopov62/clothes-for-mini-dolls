@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import type { ProductCheckoutFormProps } from "../types";
 import { validateClientName, validateEmail, validatePhone } from "../utils/formValidation";
 import styles from "./ProductCheckoutForm.module.css";
@@ -25,13 +25,6 @@ const ProductCheckoutForm = ({
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const submitBtnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (submitError) {
-      submitBtnRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-  }, [submitError]);
 
   const nameError = validateClientName(clientName);
   const phoneError = validatePhone(phone);
@@ -58,9 +51,6 @@ const ProductCheckoutForm = ({
     setSubmitError(null);
     if (nameError || phoneError || emailError) return;
     if (!agreed) return;
-    requestAnimationFrame(() => {
-      submitBtnRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    });
     setIsSubmitting(true);
     try {
       await Promise.resolve(onSubmitOrder());
@@ -203,12 +193,7 @@ const ProductCheckoutForm = ({
           </p>
         ) : null}
 
-        <button
-          ref={submitBtnRef}
-          type="submit"
-          className={styles.submitButton}
-          disabled={isSubmitting}
-        >
+        <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
           {isSubmitting ? "Отправка…" : "Отправить заказ"}
         </button>
       </form>
