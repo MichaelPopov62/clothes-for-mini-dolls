@@ -85,12 +85,13 @@
 .qtyInput {
   width: 4.5rem;
   max-width: 100%;
-  padding: 8px 10px;
+  padding: 10px 10px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: #ffffff;
+  color: #111827;
+  background: #ffffff;
   box-sizing: border-box;
 }
 
@@ -144,12 +145,14 @@
   border: none;
   background: #db2777;
   color: #ffffff;
-  padding: 12px 20px;
+  padding: 14px 20px;
   border-radius: 999px;
   cursor: pointer;
   font-weight: 800;
   font-size: 16px;
+  line-height: 1.2;
   transition: background 150ms ease;
+  touch-action: manipulation;
 }
 
 .buyButton:hover {
@@ -174,6 +177,19 @@
 }
 
 @media (max-width: 600px) {
+  .section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .tableWrap {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: visible;
+  }
+
   .table {
     min-width: 0;
   }
@@ -197,6 +213,7 @@
     gap: 12px;
     border-bottom: 1px solid #f3f4f6;
     padding: 12px 14px;
+    min-width: 0;
   }
 
   .table tr td:last-child {
@@ -216,6 +233,12 @@
 
   .cellTitle::before {
     align-self: flex-start;
+  }
+
+  .qtyCell {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: stretch;
   }
 }
 

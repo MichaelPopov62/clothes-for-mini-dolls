@@ -8,6 +8,13 @@ import styles from "./ProductModal.module.css";
 
 type ModalStep = "details" | "order" | "checkout";
 
+/** Абсолютный URL: на части мобильных браузеров относительный путь к API ведёт себя нестабильнее внутри модалки */
+function resolveOrderApiUrl(): string {
+  const custom = import.meta.env.VITE_ORDER_API_URL?.trim();
+  if (custom) return custom;
+  return new URL("/api/send-order", window.location.origin).href;
+}
+
 const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const primaryVideo = product.videos?.[0];
   const [step, setStep] = useState<ModalStep>("details");
@@ -43,7 +50,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
     const quantity = parseInt(orderQuantityText.trim(), 10);
     const lineTotalFormatted = formatPriceUah(product.priceAmount * quantity);
 
-    const url = import.meta.env.VITE_ORDER_API_URL ?? "/api/send-order";
+    const url = resolveOrderApiUrl();
     let res: Response;
     try {
       res = await fetch(url, {

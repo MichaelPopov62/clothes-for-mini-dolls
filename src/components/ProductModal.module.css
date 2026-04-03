@@ -21,10 +21,15 @@
   border-radius: 18px;
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
+  /* iPhone: нижняя прокрутка не уезжает под индикатор «домой» */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  touch-action: pan-y;
 }
 
 .close {
