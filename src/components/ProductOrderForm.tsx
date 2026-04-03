@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { ProductOrderFormProps } from "../types";
-import { formatPriceUah } from "../utils/formatPrice";
+import { formatPriceUah } from "@/utils";
 import styles from "./ProductOrderForm.module.css";
 
 /** Одна позиция: название, количество, цена из каталога, сумма по строке */

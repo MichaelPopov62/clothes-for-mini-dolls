@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
-import { useEffect, useMemo, useState } from "react";
-import { smoothScrollToId } from "../utils/scroll";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { smoothScrollToId } from "@/utils";
 
 const useMediaQuery = (query: string) => {
   const getMatches = () =>
@@ -49,7 +49,7 @@ const Header = () => {
     if (isMobile) setMenuOpen(false);
   };
 
-  const onAnchorClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const onAnchorClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (!href.startsWith("#")) return;
     e.preventDefault();
     const id = href.slice(1);

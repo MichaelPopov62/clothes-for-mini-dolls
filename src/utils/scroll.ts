@@ -1,4 +1,6 @@
-/** Плавный скролл к элементу по `id` (клиентское приложение) */
+/** Плавный скролл к элементу по `id` */
 export function smoothScrollToId(id: string): void {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  globalThis.document?.getElementById(id)?.scrollIntoView({
+    behavior: "smooth",
+  });
 }
