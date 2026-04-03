@@ -21,7 +21,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['api/**/*.ts', 'lib/**/*.ts', 'vite.config.ts'],
+    files: ['api/**/*.ts', 'vite.config.ts'],
     extends: [js.configs.recommended, tseslint.configs.recommended],
     languageOptions: {
       ecmaVersion: 2020,

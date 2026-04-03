@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sendToTelegram } from "../lib/telegram.js";
+import { sendToTelegram } from "./lib/telegram.js";
 
 /** Тело запроса от клиента (заказ из модалки каталога) */
 type OrderPayload = {
