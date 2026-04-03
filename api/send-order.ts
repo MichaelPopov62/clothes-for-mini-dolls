@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendToTelegram } from "../lib/telegram.js";
 
@@ -13,9 +14,17 @@ type OrderPayload = {
   email?: unknown;
 };
 
-/** Vercel обычно отдаёт объект; на всякий случай обрабатываем строку */
+/** Объект, JSON-строка или Buffer (на проде Vercel встречается и то и другое) */
 function parseOrderBody(raw: unknown): OrderPayload | null {
   if (raw == null) return null;
+  if (Buffer.isBuffer(raw)) {
+    try {
+      const parsed: unknown = JSON.parse(raw.toString("utf8"));
+      return typeof parsed === "object" && parsed !== null ? (parsed as OrderPayload) : null;
+    } catch {
+      return null;
+    }
+  }
   if (typeof raw === "string") {
     try {
       const parsed: unknown = JSON.parse(raw);
@@ -26,6 +35,32 @@ function parseOrderBody(raw: unknown): OrderPayload | null {
   }
   if (typeof raw === "object") return raw as OrderPayload;
   return null;
+}
+
+/** Если body не распарсили заранее — читаем поток (иначе parseOrderBody получает undefined) */
+function readBodyFromStream(req: VercelRequest): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: string | Buffer) => {
+      chunks.push(typeof chunk === "string" ? Buffer.from(chunk, "utf8") : chunk);
+    });
+    req.on("end", () => {
+      try {
+        const s = Buffer.concat(chunks).toString("utf8");
+        resolve(s.trim() ? JSON.parse(s) : null);
+      } catch {
+        resolve(null);
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
+async function resolveRequestBody(req: VercelRequest): Promise<unknown> {
+  if (req.body === undefined || req.body === null) {
+    return readBodyFromStream(req);
+  }
+  return req.body;
 }
 
 function isNonEmptyString(v: unknown): v is string {
@@ -49,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ success: false, message: "Метод не поддерживается" });
   }
 
-  const body = parseOrderBody(req.body);
+  const body = parseOrderBody(await resolveRequestBody(req));
   if (!body) {
     return res.status(400).json({ success: false, message: "Некорректное тело запроса" });
   }
