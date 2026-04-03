@@ -86,13 +86,23 @@
   width: 4.5rem;
   max-width: 100%;
   padding: 10px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #4b5563;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
-  background: #ffffff;
+  color: #ffffff;
+  caret-color: #ffffff;
+  background: #1f2937;
   box-sizing: border-box;
+}
+
+.qtyInput:-webkit-autofill,
+.qtyInput:-webkit-autofill:hover,
+.qtyInput:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #1f2937 inset;
+  box-shadow: 0 0 0 1000px #1f2937 inset;
+  transition: background-color 99999s ease-out 0s;
 }
 
 .qtyInput:focus {

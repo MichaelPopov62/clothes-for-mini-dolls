@@ -88,22 +88,23 @@
   min-width: 0;
   max-width: 100%;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #4b5563;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #ffffff;
+  caret-color: #ffffff;
   box-sizing: border-box;
-  background: #ffffff;
+  background: #1f2937;
 }
 
-/* Автозаполнение на iOS/Android — не даём жёлтому фону «съесть» цвет текста */
+/* Автозаполнение: сохраняем тёмный фон и светлый текст */
 .fieldInput:-webkit-autofill,
 .fieldInput:-webkit-autofill:hover,
 .fieldInput:-webkit-autofill:focus {
-  -webkit-text-fill-color: #111827;
-  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset;
-  box-shadow: 0 0 0 1000px #f9fafb inset;
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #1f2937 inset;
+  box-shadow: 0 0 0 1000px #1f2937 inset;
   transition: background-color 99999s ease-out 0s;
 }
 
