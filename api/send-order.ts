@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sendToTelegram } from "./lib/telegram.js";
+import { isTelegramEnvConfigured, sendToTelegram } from "./lib/telegram.js";
 
 /** Тело запроса от клиента (заказ из модалки каталога) */
 type OrderPayload = {
@@ -58,7 +58,11 @@ function readBodyFromStream(req: VercelRequest): Promise<unknown> {
 
 async function resolveRequestBody(req: VercelRequest): Promise<unknown> {
   if (req.body === undefined || req.body === null) {
-    return readBodyFromStream(req);
+    try {
+      return await readBodyFromStream(req);
+    } catch {
+      return null;
+    }
   }
   return req.body;
 }
@@ -67,8 +71,17 @@ function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim().length > 0;
 }
 
-function isPositiveInt(v: unknown): v is number {
-  return typeof v === "number" && Number.isInteger(v) && v > 0;
+/** Vercel/прокси иногда отдают quantity строкой — приводим к целому > 0 */
+function normalizePositiveQuantity(v: unknown): number | null {
+  if (typeof v === "number" && Number.isInteger(v) && v > 0) return v;
+  if (typeof v === "string") {
+    const t = v.trim();
+    if (/^\d+$/.test(t)) {
+      const n = parseInt(t, 10);
+      if (n > 0) return n;
+    }
+  }
+  return null;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -84,7 +97,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ success: false, message: "Метод не поддерживается" });
   }
 
-  const body = parseOrderBody(await resolveRequestBody(req));
+  let body: OrderPayload | null;
+  try {
+    body = parseOrderBody(await resolveRequestBody(req));
+  } catch {
+    body = null;
+  }
   if (!body) {
     return res.status(400).json({ success: false, message: "Некорректное тело запроса" });
   }
@@ -93,7 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     productId,
     productTitle,
     priceLabel,
-    quantity,
+    quantity: quantityRaw,
     lineTotalFormatted,
     clientName,
     phone,
@@ -103,7 +121,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!isNonEmptyString(productTitle)) {
     return res.status(400).json({ success: false, message: "Не указан товар" });
   }
-  if (!isPositiveInt(quantity)) {
+  const quantity = normalizePositiveQuantity(quantityRaw);
+  if (quantity === null) {
     return res.status(400).json({ success: false, message: "Некорректное количество" });
   }
   if (!isNonEmptyString(clientName)) {
@@ -136,14 +155,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `Телефон: ${phone.trim()}\n` +
     `E-mail: ${email.trim()}`;
 
+  if (!isTelegramEnvConfigured()) {
+    console.error(
+      "Нет TELEGRAM_TOKEN / TELEGRAM_CHAT_ID в окружении функции (проверьте Vercel → Env → Production и Redeploy).",
+    );
+    return res.status(503).json({
+      success: false,
+      message:
+        "Заказ не отправляется: на сервере не заданы TELEGRAM_TOKEN и TELEGRAM_CHAT_ID. В Vercel откройте проект → Settings → Environment Variables, добавьте обе переменные для окружения Production и выполните Redeploy.",
+    });
+  }
+
   try {
     await sendToTelegram(messageText);
     return res.status(200).json({ success: true, message: "Заказ отправлен" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({
+    const hint =
+      err instanceof Error && err.message.length > 0
+        ? ` Подсказка: ${err.message}`
+        : "";
+    return res.status(502).json({
       success: false,
-      message: "Не удалось отправить заказ. Попробуйте позже.",
+      message:
+        "Не удалось отправить заказ через Telegram. Проверьте токен бота, chat_id и что бот может писать в этот чат." +
+        hint,
     });
   }
 }
