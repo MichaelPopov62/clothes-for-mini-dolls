@@ -1,4 +1,4 @@
-/* Форма заказа по одному товару (внутри модалки или отдельно) */
+/* Форма контактов перед отправкой заказа (внутри модалки) */
 
 .section {
   padding: 44px 16px 24px;
@@ -37,6 +37,10 @@
   outline-offset: 2px;
 }
 
+.form {
+  margin: 0;
+}
+
 .tableWrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -71,36 +75,55 @@
   font-weight: 600;
 }
 
-.cellTitle {
-  max-width: 200px;
-  line-height: 1.35;
-}
-
-.cellTotal {
-  color: #db2777;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.qtyInput {
-  width: 4.5rem;
+.fieldInput {
+  width: 100%;
+  min-width: 0;
   max-width: 100%;
   padding: 8px 10px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   color: #111827;
   box-sizing: border-box;
+  color: #ffffff;
 }
 
-.qtyInput:focus {
+.fieldInput:focus {
   outline: none;
   border-color: #db2777;
   box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.2);
 }
 
-.buyButton {
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 14px 12px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.checkbox {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 2px;
+  accent-color: #db2777;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #374151;
+  cursor: pointer;
+}
+
+.submitButton {
   display: block;
   width: 100%;
   max-width: 280px;
@@ -116,11 +139,11 @@
   transition: background 150ms ease;
 }
 
-.buyButton:hover {
+.submitButton:hover {
   background: #be185d;
 }
 
-.buyButton:focus-visible {
+.submitButton:focus-visible {
   outline: 2px solid #db2777;
   outline-offset: 2px;
 }
@@ -156,9 +179,9 @@
 
   .table td {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
     border-bottom: 1px solid #f3f4f6;
     padding: 12px 14px;
   }
@@ -171,15 +194,7 @@
     content: attr(data-label);
     font-weight: 800;
     color: #6b7280;
-    flex-shrink: 0;
-  }
-
-  .cellTitle {
-    max-width: none;
-  }
-
-  .cellTitle::before {
-    align-self: flex-start;
+    font-size: 13px;
   }
 }
 
@@ -201,7 +216,7 @@
     align-self: flex-start;
   }
 
-  .buyButton {
+  .submitButton {
     margin: 24px 0 0;
     align-self: flex-start;
   }

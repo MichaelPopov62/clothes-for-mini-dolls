@@ -20,5 +20,24 @@ export type ProductModalProps = {
 export type ProductOrderFormProps = {
   product: Product;
   onBack: () => void;
+  /** Количество (строка для поля ввода) — хранится в модалке, чтобы не терялось при «Назад» */
+  quantityText: string;
+  onQuantityTextChange: (value: string) => void;
+  /** Переход к форме контактов (черновик заказа не сбрасывается) */
+  onBuy: () => void;
+};
+
+export type ProductCheckoutFormProps = {
+  product: Product;
+  onBack: () => void;
+  settlement: string;
+  onSettlementChange: (value: string) => void;
+  phone: string;
+  onPhoneChange: (value: string) => void;
+  email: string;
+  onEmailChange: (value: string) => void;
+  agreed: boolean;
+  onAgreedChange: (value: boolean) => void;
+  onSubmitOrder: () => void;
 };
 

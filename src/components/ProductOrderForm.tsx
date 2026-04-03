@@ -1,12 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { ProductOrderFormProps } from "../types";
 import { formatPriceUah } from "../utils/formatPrice";
 import styles from "./ProductOrderForm.module.css";
 
 /** Одна позиция: название, количество, цена из каталога, сумма по строке */
-const ProductOrderForm = ({ product, onBack }: ProductOrderFormProps) => {
-  const [quantityText, setQuantityText] = useState("1");
-
+const ProductOrderForm = ({
+  product,
+  onBack,
+  quantityText,
+  onQuantityTextChange,
+  onBuy,
+}: ProductOrderFormProps) => {
   const quantity = useMemo(() => {
     if (quantityText === "") return 1;
     const n = parseInt(quantityText, 10);
@@ -21,19 +25,19 @@ const ProductOrderForm = ({ product, onBack }: ProductOrderFormProps) => {
 
   const handleQuantityChange = (value: string) => {
     if (value === "") {
-      setQuantityText("");
+      onQuantityTextChange("");
       return;
     }
     if (!/^\d+$/.test(value)) return;
-    setQuantityText(value);
+    onQuantityTextChange(value);
   };
 
   const handleQuantityBlur = () => {
     const n = parseInt(quantityText, 10);
     if (!Number.isFinite(n) || n < 1) {
-      setQuantityText("1");
+      onQuantityTextChange("1");
     } else {
-      setQuantityText(String(n));
+      onQuantityTextChange(String(n));
     }
   };
 
@@ -83,6 +87,10 @@ const ProductOrderForm = ({ product, onBack }: ProductOrderFormProps) => {
           </tbody>
         </table>
       </div>
+
+      <button type="button" className={styles.buyButton} onClick={onBuy}>
+        Купить
+      </button>
     </div>
   );
 };

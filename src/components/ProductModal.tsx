@@ -1,18 +1,47 @@
 import { useState } from "react";
 import type { ProductModalProps } from "../types";
+import ProductCheckoutForm from "./ProductCheckoutForm";
 import ProductOrderForm from "./ProductOrderForm";
 import styles from "./ProductModal.module.css";
 
-type ModalStep = "details" | "order";
+type ModalStep = "details" | "order" | "checkout";
 
 const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const primaryVideo = product.videos?.[0];
   const [step, setStep] = useState<ModalStep>("details");
+  const [orderQuantityText, setOrderQuantityText] = useState("1");
+  const [checkoutSettlement, setCheckoutSettlement] = useState("");
+  const [checkoutPhone, setCheckoutPhone] = useState("");
+  const [checkoutEmail, setCheckoutEmail] = useState("");
+  const [checkoutAgreed, setCheckoutAgreed] = useState(false);
+
+  const resetAllDrafts = () => {
+    setOrderQuantityText("1");
+    setCheckoutSettlement("");
+    setCheckoutPhone("");
+    setCheckoutEmail("");
+    setCheckoutAgreed(false);
+    setStep("details");
+  };
+
+  const handleClose = () => {
+    resetAllDrafts();
+    onClose();
+  };
+
+  const handleBuy = () => {
+    setStep("checkout");
+  };
+
+  const handleSubmitOrder = () => {
+    resetAllDrafts();
+    onClose();
+  };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay} onClick={handleClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.close} onClick={onClose} type="button">
+        <button className={styles.close} onClick={handleClose} type="button">
           ✕
         </button>
 
@@ -24,7 +53,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   src={product.image}
                   className={styles.image}
                   alt={product.title}
-                  onClick={onClose}
+                  onClick={handleClose}
                 />
               </div>
 
@@ -77,10 +106,27 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
               </button>
             </div>
           </div>
-        ) : (
+        ) : step === "order" ? (
           <ProductOrderForm
             product={product}
             onBack={() => setStep("details")}
+            quantityText={orderQuantityText}
+            onQuantityTextChange={setOrderQuantityText}
+            onBuy={handleBuy}
+          />
+        ) : (
+          <ProductCheckoutForm
+            product={product}
+            onBack={() => setStep("order")}
+            settlement={checkoutSettlement}
+            onSettlementChange={setCheckoutSettlement}
+            phone={checkoutPhone}
+            onPhoneChange={setCheckoutPhone}
+            email={checkoutEmail}
+            onEmailChange={setCheckoutEmail}
+            agreed={checkoutAgreed}
+            onAgreedChange={setCheckoutAgreed}
+            onSubmitOrder={handleSubmitOrder}
           />
         )}
       </div>
