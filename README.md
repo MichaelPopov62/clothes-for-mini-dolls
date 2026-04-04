@@ -1,62 +1,106 @@
-1. Мета сайту
-1. Представити майстриню (довірчий профіль).
-1. Показати асортимент (сукні, костюми).
-1. Пояснити з чого складаються вироби (елементи: тканина, декор, фурнітура).
-1. Зібрати запити на замовлення (форма) та контакти (місто, адреса, соцмережі).\
-1. (Опційно) Продавати/приймати передоплату або приймати замовлення під запит.
-   +++++++++++++++++++++++++++++++++++++++
-1. Карта сайту (Sitemap)
-1. Головна (Home)
-   o Коротко: фото майстрині + ключові продукти + CTA (замовити)
-1. Про майстриню (About)
-   o Історія, фото робочого процесу, місце (місто, адреса), робочі години
-1. Каталог (Catalog)
-   o Підрозділи: Сукні | Костюми |
-   o Фільтри: тип, матеріал, розмір, ціна (якщо є)
-1. Сторінка товару (Product page)
-   o Фото, опис, склад (елементи)
+# MiniModa Studio — витрина одежды для мини-кукол
 
-1. Галерея / Портфоліо
-   o Фото готових робіт
+Одностраничное приложение на **React Router**: главная (лендинг) с блоком о мастерице, каталогом из локальных данных, модалкой товара и заказом на сервер; отдельные маршруты **политики конфиденциальности** и **условий использования**. Заказы дублируются в **Telegram**.
 
-1. Контакти (Contact)
-   o Місто, повна адреса, карта (вбудована), телефон, email, посилання на соцмережі
-1. FAQ / Умови замовлення
-   o Термін виготовлення, доставка, оплата, гарантія
-   ++++++++++++++++++++++++++++++++++++++++++++++
-1. Структура сторінки товару — що має бути на кожному Product page
-1. Назва та короткий опис
+## Стек
 
-1. Склад: перелік елементів (тканина, підкладка, ґудзики, нитки)
-1. Ціна (або «за запитом») та кнопка «Замовити / Залишити заявку»
-1. Форма швидкого замовлення (ім’я, телефон, email, коментар, адреса доставки)
-1. Соцкнопки для репосту + іконки Instagram/Facebook/TikTok
-   ++++++++++++++++++++++++++++++++++++++++++++
-1. Форма замовлення — мінімальний набір полів
-1. Ім'я
-1. Телефон (обов'язково)
-1. Email (за бажанням)
-1. Адреса доставки / Місто
-1. Вибір товару або поле «Опис замовлення»
-1. Опції: упаковка (так/ні), термін виконання (стандарт/терміново)
-1. Файл (опціонально) — фото референсу
-   Примітка: для старту — надіслати форму на email + копія в Google Sheets через безкоштовні сервіси (Zapier/Make/Google Forms). Це безкоштовний спосіб без створення повноцінного бекенду.
-   ++++++++++++++++++++++++++++++++++++++++++++
-   /project-root
-   ├─ app/
-   │ ├─ page.tsx # Главная: Кратко о мастере + Вход в каталог
-   │ ├─ catalog/
-   │ │ └─ page.tsx # Основной экран с пагинацией и фильтрами (М/Ж)
-   │ ├─ about/ # О мастере и её коллекции кукол (манекенах)
-   │ └─ contact/ # Общие контакты
-   ├─ components/
-   │ ├─ catalog/
-   │ │ ├─ ProductGrid.tsx # Сетка с пагинацией
-   │ │ ├─ ProductCard.tsx # Превью: Фото манекена + Название + Цена
-   │ │ └─ ProductModal.tsx # Модалка: Swiper с фото + Полное описание + Кнопка
-   │ ├─ ui/
-   │ │ ├─ SwiperWrapper.tsx # Настройка библиотеки Swiper
-   │ │ └─ Pagination.tsx # Кнопки переключения страниц
-   │ └─ OrderButton.tsx # Линк в мессенджер с ID товара
-   ├─ data/
-   │ └─ products.ts
+| Слой | Технологии |
+|------|------------|
+| UI | React 19, TypeScript, Vite 8, CSS Modules, React Router 7 |
+| Компилятор | React Compiler (`@vitejs/plugin-react` + `@rolldown/plugin-babel`, `reactCompilerPreset`) |
+| Хостинг | [Vercel](https://vercel.com) — статика из `dist/`, API — serverless-функция в `api/` |
+
+## Структура репозитория
+
+```
+src/
+  main.tsx              — вход, BrowserRouter
+  App.tsx               — маршруты: /, /privacy, /terms
+  layouts/SiteLayout.tsx — шапка, Outlet, подвал; скролл по hash на главной
+  pages/
+    HomePage.tsx        — главная: секции каталога, модалка заказа
+    PrivacyPolicyPage.tsx, TermsOfUsePage.tsx — юридические страницы
+  components/           — Header, Footer, SocialNetworkLinks, AboutSection, Catalog,
+                          ProductCard, ProductModal, ProductOrderForm, ProductCheckoutForm
+  data/products.ts      — каталог (данные в коде)
+  types/                — типы товара и пропсов
+  utils/                — валидация форм, цены, скролл, siteMeta, useDocumentTitle, соцсети
+api/
+  send-order.ts         — обработчик POST заказа (Vercel Function)
+  lib/telegram.ts       — вызов Telegram Bot API (sendMessage)
+public/
+  favicon.svg, robots.txt, sitemap.xml, assets/icon/
+```
+
+## Раздел для фронтенд-разработчика
+
+- **Стили:** преимущественно `*.module.css` рядом с компонентами, глобально — `src/index.css`.
+- **Алиас `@/`** указывает на `src/` (см. `vite.config.ts`).
+- **Данные каталога:** правки ассортимента — в `src/data/products.ts` и при необходимости в `src/types/product.ts`.
+- **Форма заказа:** логика отправки — `ProductModal.tsx` (`resolveOrderApiUrl`, `fetch`), валидация — `src/utils/formValidation.ts`.
+- **Соцсети и иконки:** `src/utils/socialLinks.ts`, спрайт — `public/assets/icon/symbol-defs.svg`.
+
+## Команды для работы локально
+
+| Команда | Назначение |
+|---------|------------|
+| `npm install` | Установка зависимостей |
+| `npm run dev` | Разработка (Vite, обычно порт 5173) |
+| `npm run dev:vercel` | Тот же фронт + локальные **Vercel Functions** (`/api/*`), нужен [Vercel CLI](https://vercel.com/docs/cli) и привязка проекта |
+| `npm run build` | `tsc -b` + production-сборка в `dist/` |
+| `npm run preview` | Просмотр собранного `dist/` |
+| `npm run lint` | ESLint |
+
+**Заказ с `npm run dev`:** Vite проксирует **`/api`** на URL из **`vite.config.ts`** (по умолчанию продакшен `https://clothes-for-mini-dolls.vercel.app`). Если прокси недоступен, задайте **`VITE_ORDER_API_URL`** с полным URL к `…/api/send-order` или используйте **`npm run dev:vercel`** (см. `src/vite-env.d.ts` и `ProductModal.tsx`).
+
+## Деплой
+
+1. Репозиторий подключён к **Vercel** (или деплой через CLI: `vercel`, прод: `vercel --prod`).
+2. В **Project → Settings** заданы **Build Command** `npm run build` и **Output Directory** `dist` (дублируется в `vercel.json`).
+3. После добавления/смены переменных окружения выполните **Redeploy**.
+
+В **`vercel.json`** задан **rewrite** SPA на `index.html` с исключением **`/api/*`**, чтобы прямые заходы на `/privacy` и `/terms` не отдавали 404.
+
+## Работа с Telegram
+
+1. Создайте бота у [@BotFather](https://t.me/BotFather), получите **токен** (`TELEGRAM_TOKEN`).
+2. Узнайте **chat_id** чата (личка с ботом, группа или канал, куда бот может писать):
+   - для лички: напишите боту, затем `https://api.telegram.org/bot<TOKEN>/getUpdates` и найдите `chat.id`;
+   - для группы: добавьте бота, дайте право писать, id обычно отрицательный.
+3. В **Vercel → Settings → Environment Variables** добавьте:
+   - `TELEGRAM_TOKEN` — токен бота;
+   - `TELEGRAM_CHAT_ID` — id чата (строка или число, без лишних кавычек в значении).
+4. Для **`vercel dev`** те же переменные можно положить в `.env` / `.env.local` в корне (не коммитить).
+
+Без обеих переменных функция отвечает **503** с пояснением (см. `api/send-order.ts`).
+
+## Продакшен
+
+- **Публичный URL:** [https://clothes-for-mini-dolls.vercel.app/](https://clothes-for-mini-dolls.vercel.app/)
+- **API в проде:** `POST /api/send-order` на **том же origin**, что и сайт (относительный путь `/api/send-order` в бандле).
+- **Статика:** `robots.txt` и `sitemap.xml` в `public/`; при смене домена обновите абсолютные URL там и в `vite.config.ts` (`DEFAULT_DEV_API_PROXY`).
+- **SPA:** в `vercel.json` настроен rewrite на `index.html`, чтобы пути из sitemap (`/privacy`, `/terms`) не отдавали 404 при прямом заходе.
+
+## Как передаётся заказ
+
+1. Пользователь в модалке товара проходит шаги (детали → количество → контакты и согласие) и отправляет форму.
+2. Браузер делает **`fetch`** на URL из `resolveOrderApiUrl()` (по умолчанию **`/api/send-order`**), метод **POST**, тело **JSON**: товар, количество, сумма, имя, телефон, e-mail (см. `ProductModal.tsx` и типы в `api/send-order.ts`).
+3. **Vercel** направляет запрос в **`api/send-order.ts`**: парсинг тела (в т.ч. Buffer/строка), валидация полей.
+4. Если заданы `TELEGRAM_TOKEN` и `TELEGRAM_CHAT_ID`, сервер вызывает **`sendToTelegram`**: HTTP POST к `https://api.telegram.org/bot<TOKEN>/sendMessage` с текстом заказа.
+5. Клиент получает JSON `{ success: true }` или сообщение об ошибке (400 / 502 / 503 и т.д.).
+
+Цепочка: **браузер → Vercel Function → Telegram Bot API → ваш чат**.
+
+## Что можно доработать и зачем
+
+| Направление | Зачем |
+|-------------|--------|
+| Прокси `/api` в `vite.config.ts` | Уже включён (цель по умолчанию — продакшен Vercel); при необходимости измените константу или логику в `vite.config.ts`. |
+| FAQ, доставка, отдельные лендинги | Расширить контент и SEO поверх текущих `/privacy` и `/terms`. |
+| Бэкенд: письма, CRM, таблицы | Дублирование заказов, резерв, если Telegram недоступен. |
+| Кэш Vite / `vercel dev` на Windows | При `EPERM` на `node_modules/.vite` вынести `cacheDir` в отдельную папку или чистить кэш. |
+| Тесты e2e/API | Регрессии на форме заказа и контракт `/api/send-order`. |
+
+## Лицензия
+
+Проект помечен как приватный (`"private": true` в `package.json`).

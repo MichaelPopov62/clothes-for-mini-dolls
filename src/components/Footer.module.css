@@ -11,13 +11,56 @@
 
 .inner {
   max-width: 1126px;
-  margin: 0 auto;
-  padding: 0 12px;
+  margin-inline: auto;
+  /* Симметричные отступы от краёв окна просмотра */
+  padding-inline: clamp(12px, 4vw, 24px);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  align-items: stretch;
-  text-align: left;
+  align-items: center;
+  text-align: center;
+}
+
+/* Узкие экраны (в т.ч. 320px): весь контент по центру */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+.contactsBlock {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.legalLink {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  transition: color 150ms ease, opacity 150ms ease;
+}
+
+.legalLink:hover {
+  color: #fbcfe8;
+}
+
+.legalLink:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 .title {
@@ -36,7 +79,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  justify-content: center;
+}
+
+.linksItem {
+  margin: 0;
+  padding: 0;
 }
 
 .link {
@@ -82,8 +133,34 @@
   }
 
   .inner {
-    padding: 0 16px;
     gap: 24px;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .contactsBlock {
+    align-items: flex-start;
+  }
+
+  .legal {
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .links {
+    justify-content: flex-start;
+  }
+
+  .legalLink {
+    font-size: 15px;
   }
 
   .title {

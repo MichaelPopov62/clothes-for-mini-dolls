@@ -1,4 +1,4 @@
-/* Mobile-first: от 320px — бургер, компактная шапка */
+/* Mobile-first: от 320px — бургер и меню с социконками; от 768px — полоска с навигацией и иконками справа */
 
 .header {
   position: sticky;
@@ -50,6 +50,53 @@
 
 .link:hover {
   color: #f472b6;
+}
+
+/* В полоске хедера — только от 768px, справа */
+.socialDesktop {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.socialItem {
+  margin: 0;
+  padding: 0;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 10px;
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.socialLink:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #f472b6;
+}
+
+.socialLink:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex: 0 0 auto;
+  display: block;
 }
 
 .burger {
@@ -171,11 +218,54 @@
   outline-offset: 2px;
 }
 
-/* От 481px: горизонтальная навигация, бургер скрыт */
-@media (min-width: 481px) {
+/* Под навигацией в меню — фиксированный отступ сверху */
+.socialMobile {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 24px;
+}
+
+.socialLinkMobile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 12px;
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.socialLinkMobile:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f472b6;
+}
+
+.socialLinkMobile:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.socialMobile .socialIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* От 768px: навигация в полоске, социконки справа, бургер скрыт */
+@media (min-width: 768px) {
   .inner {
     padding: 16px 16px;
     gap: 16px;
+    justify-content: flex-start;
   }
 
   .brand {
@@ -185,6 +275,16 @@
 
   .nav {
     display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .socialDesktop {
+    display: flex;
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
   .burger {

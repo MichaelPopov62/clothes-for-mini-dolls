@@ -8,6 +8,12 @@ import styles from "./ProductModal.module.css";
 
 type ModalStep = "details" | "order" | "checkout";
 
+const ORDER_API_PATH = "/api/send-order";
+
+/** Сообщение при сбое fetch (сеть / прокси), а не при ответе сервера с телом JSON */
+const ORDER_FETCH_FAILED_MESSAGE =
+  "Запрос не дошёл до сервера заказа: нет сети, обрыв соединения или недоступен прокси для пути /api при запуске только Vite (см. server.proxy в vite.config.ts). Проверьте интернет. Альтернативы: задать в .env полный URL эндпоинта в переменной VITE_ORDER_API_URL или выполнить npm run dev:vercel для локальных функций Vercel.";
+
 /**
  * VITE_ORDER_API_URL вшивается в бандл при `vite build`. Если там localhost,
  * в проде запрос уходит на машину пользователя — заказы не доходят до Vercel.
@@ -19,15 +25,15 @@ function resolveOrderApiUrl(): string {
       try {
         const host = new URL(raw).hostname;
         if (host === "localhost" || host === "127.0.0.1") {
-          return "/api/send-order";
+          return ORDER_API_PATH;
         }
       } catch {
-        return "/api/send-order";
+        return ORDER_API_PATH;
       }
     }
     return raw;
   }
-  return "/api/send-order";
+  return ORDER_API_PATH;
 }
 
 const ProductModal = ({ product, onClose }: ProductModalProps) => {
@@ -83,9 +89,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
         }),
       });
     } catch {
-      throw new Error(
-        "Сервер недоступен. Для локальной проверки используйте npm run dev:vercel или задайте VITE_ORDER_API_URL.",
-      );
+      throw new Error(ORDER_FETCH_FAILED_MESSAGE);
     }
 
     let data: { success?: boolean; message?: string } = {};

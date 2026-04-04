@@ -1,32 +1,18 @@
-import { useState } from "react";
-import { products } from "./data/products";
-import type { Product } from "./types";
-import Header from "./components/Header";
-import AboutSection from "./components/AboutSection";
-import Catalog from "./components/Catalog";
-import ProductModal from "./components/ProductModal";
-import Footer from "./components/Footer";
-import styles from "./App.module.css";
+import { Route, Routes } from "react-router-dom";
+import SiteLayout from "@/layouts/SiteLayout";
+import HomePage from "@/pages/HomePage";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import TermsOfUsePage from "@/pages/TermsOfUsePage";
 
 const App = () => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
   return (
-    <div className={styles.app}>
-      <Header />
-      <main className={styles.main}>
-        <AboutSection />
-        <Catalog products={products} onSelectProduct={setSelectedProduct} />
-      </main>
-      <Footer />
-      {selectedProduct && (
-        <ProductModal
-          key={selectedProduct.id}
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
-    </div>
+    <Routes>
+      <Route element={<SiteLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfUsePage />} />
+      </Route>
+    </Routes>
   );
 };
 

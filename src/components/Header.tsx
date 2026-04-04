@@ -1,6 +1,8 @@
 import styles from "./Header.module.css";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
-import { smoothScrollToId } from "@/utils";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import SocialNetworkLinks from "./SocialNetworkLinks";
+import { SITE_NAME, smoothScrollToId } from "@/utils";
 
 const useMediaQuery = (query: string) => {
   const getMatches = () =>
@@ -20,7 +22,10 @@ const useMediaQuery = (query: string) => {
 };
 
 const Header = () => {
-  const isMobile = useMediaQuery("(max-width: 480px)");
+  const navigate = useNavigate();
+  const location = useLocation();
+  /* Полноэкранное меню при ширине < 768px (включая 320px) */
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const [menuOpen, setMenuOpen] = useState(() => isMobile);
 
   useEffect(() => {
@@ -31,17 +36,21 @@ const Header = () => {
     };
   }, [isMobile, menuOpen]);
 
-  const links = useMemo(
+  const sectionLinks = useMemo(
     () => [
-      { href: "#about", label: "О мастере" },
-      { href: "#catalog", label: "Изделия" },
-      { href: "#contacts", label: "Контакты" },
+      { hash: "#about", label: "О мастере" },
+      { hash: "#catalog", label: "Изделия" },
+      { hash: "#contacts", label: "Контакты" },
     ],
     [],
   );
 
   const onLogoClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (location.pathname !== "/") {
+      navigate("/");
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     if (isMobile) setMenuOpen(true);
   };
 
@@ -49,33 +58,42 @@ const Header = () => {
     if (isMobile) setMenuOpen(false);
   };
 
-  const onAnchorClick = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    if (!href.startsWith("#")) return;
-    e.preventDefault();
-    const id = href.slice(1);
-    smoothScrollToId(id);
-    onNavClick();
-  };
+  const onSectionLinkClick =
+    (hash: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+      if (location.pathname !== "/") return;
+      e.preventDefault();
+      smoothScrollToId(hash.slice(1));
+      onNavClick();
+    };
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <button type="button" className={styles.brand} onClick={onLogoClick}>
-          MiniModa Studio
+          {SITE_NAME}
         </button>
 
         <nav className={styles.nav} aria-label="Навигация">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
+          {sectionLinks.map((l) => (
+            <Link
+              key={l.hash}
+              to={{ pathname: "/", hash: l.hash }}
               className={styles.link}
-              onClick={onAnchorClick(l.href)}
+              onClick={onSectionLinkClick(l.hash)}
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
+
+        <SocialNetworkLinks
+          classNames={{
+            list: styles.socialDesktop,
+            item: styles.socialItem,
+            link: styles.socialLink,
+            icon: styles.socialIcon,
+          }}
+        />
 
         <button
           type="button"
@@ -96,21 +114,30 @@ const Header = () => {
               className={styles.mobileLogo}
               onClick={onLogoClick}
             >
-              MiniModa Studio
+              {SITE_NAME}
             </button>
 
             <nav className={styles.mobileNav} aria-label="Навигация">
-              {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
+              {sectionLinks.map((l) => (
+                <Link
+                  key={l.hash}
+                  to={{ pathname: "/", hash: l.hash }}
                   className={styles.mobileLink}
-                  onClick={onAnchorClick(l.href)}
+                  onClick={onSectionLinkClick(l.hash)}
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
+
+            <SocialNetworkLinks
+              classNames={{
+                list: styles.socialMobile,
+                item: styles.socialItem,
+                link: styles.socialLinkMobile,
+                icon: styles.socialIcon,
+              }}
+            />
           </div>
         </div>
       )}
@@ -119,4 +146,3 @@ const Header = () => {
 };
 
 export default Header;
-
