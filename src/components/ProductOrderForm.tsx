@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ProductOrderFormProps } from "../types";
-import { formatPriceUah } from "@/utils";
+import { formatArticleDisplay, formatPriceUah } from "@/utils";
 import { validateOrderQuantity } from "../utils/formValidation";
 import styles from "./ProductOrderForm.module.css";
 
@@ -70,6 +70,7 @@ const ProductOrderForm = ({
           <thead>
             <tr>
               <th scope="col">Товар</th>
+              <th scope="col">Артикул</th>
               <th scope="col">Количество</th>
               <th scope="col">Цена за ед.</th>
               <th scope="col">Сумма</th>
@@ -79,6 +80,9 @@ const ProductOrderForm = ({
             <tr>
               <td data-label="Товар" className={styles.cellTitle}>
                 {product.title}
+              </td>
+              <td data-label="Артикул" className={styles.cellArticle}>
+                {formatArticleDisplay(product.article)}
               </td>
               <td data-label="Количество">
                 <div className={styles.qtyCell}>

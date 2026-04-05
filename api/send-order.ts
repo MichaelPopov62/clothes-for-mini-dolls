@@ -5,6 +5,7 @@ import { isTelegramEnvConfigured, sendToTelegram } from "./lib/telegram.js";
 /** Тело запроса от клиента (заказ из модалки каталога) */
 type OrderPayload = {
   productId?: unknown;
+  article?: unknown;
   productTitle?: unknown;
   priceLabel?: unknown;
   quantity?: unknown;
@@ -109,6 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const {
     productId,
+    article: articleRaw,
     productTitle,
     priceLabel,
     quantity: quantityRaw,
@@ -139,6 +141,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     typeof productId === "number" && Number.isFinite(productId)
       ? `ID: ${productId}`
       : "ID: —";
+  const articleLine = isNonEmptyString(articleRaw)
+    ? `Артикул: ${articleRaw.trim()}`
+    : "Артикул: —";
   const priceStr = isNonEmptyString(priceLabel) ? priceLabel : "—";
   const totalStr = isNonEmptyString(lineTotalFormatted) ? lineTotalFormatted : "—";
 
@@ -146,6 +151,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `🛒 Новый заказ\n` +
     `— — —\n` +
     `Товар: ${productTitle.trim()}\n` +
+    `${articleLine}\n` +
     `${idLine}\n` +
     `Цена (каталог): ${priceStr}\n` +
     `Количество: ${quantity}\n` +

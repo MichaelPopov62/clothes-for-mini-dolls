@@ -3,6 +3,7 @@ import type { Product } from "../types";
 export const products: Product[] = [
   {
     id: 1,
+    article: "001w",
     title: "Девушка в пальто с собакой",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -12,6 +13,7 @@ export const products: Product[] = [
   },
   {
     id: 2,
+    article: "002w",
     title: "Девушка в пальто с белым ведмедем",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -21,6 +23,7 @@ export const products: Product[] = [
   },
   {
     id: 3,
+    article: "003w",
     title: "Девушка в пальто с собакой",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -30,6 +33,7 @@ export const products: Product[] = [
   },
   {
     id: 4,
+    article: "004w",
     title: "Девушка костюм с юбкой клеш",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -40,6 +44,7 @@ export const products: Product[] = [
 
   {
     id: 5,
+    article: "005w",
     title: "Девушка юбка клеш ветер",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -50,6 +55,7 @@ export const products: Product[] = [
 
   {
     id: 6,
+    article: "006w",
     title: "Девушка юбка клеш в ожидании",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -60,6 +66,7 @@ export const products: Product[] = [
 
   {
     id: 7,
+    article: "007w",
     title: "Девушка мини юбка+ жакет",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -71,6 +78,7 @@ export const products: Product[] = [
 
   {
     id: 8,
+    article: "008w",
     title: "Девушка мини юбка+ жакет сбоку",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -81,6 +89,7 @@ export const products: Product[] = [
 
   {
     id: 9,
+    article: "009w",
     title: "Девушка в оранжевым воротником стоя",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -92,6 +101,7 @@ export const products: Product[] = [
 
   {
     id: 10,
+    article: "010w",
     title: "Девушка пальто с костюмом",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -102,6 +112,7 @@ export const products: Product[] = [
 
   {
     id: 11,
+    article: "011w",
     title: "Девушка пальто в костюме",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -112,6 +123,7 @@ export const products: Product[] = [
 
   {
     id: 12,
+    article: "012w",
     title: "Девушка в оранжевом костюме",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -122,6 +134,7 @@ export const products: Product[] = [
 
   {
     id: 13,
+    article: "013w",
     title: "Девушка в оранжевом костюме 2",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -132,6 +145,7 @@ export const products: Product[] = [
 
   {
     id: 14,
+    article: "014w",
     title: "Девушка в белом платье",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -141,6 +155,7 @@ export const products: Product[] = [
   },
   {
     id: 15,
+    article: "015w",
     title: "Девушка всарвфане с поясом",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -150,6 +165,7 @@ export const products: Product[] = [
   },
   {
     id: 16,
+    article: "016w",
     title: "Девушка в бальном платье-морской волны",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -159,6 +175,7 @@ export const products: Product[] = [
   },
   {
     id: 17,
+    article: "017w",
     title: "Девушка в брючный костюм",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -168,6 +185,7 @@ export const products: Product[] = [
   },
   {
     id: 18,
+    article: "018w",
     title: "Девушка в костюм с шортами",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -177,6 +195,7 @@ export const products: Product[] = [
   },
   {
     id: 19,
+    article: "019w",
     title: "Девушка в платье голубой феи",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -186,6 +205,7 @@ export const products: Product[] = [
   },
   {
     id: 20,
+    article: "020w",
     title: "Девушка в костюме и пальто",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -196,6 +216,7 @@ export const products: Product[] = [
 
   {
     id: 21,
+    article: "021w",
     title: "Девушка в платье рыбка бальное",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -205,6 +226,7 @@ export const products: Product[] = [
   },
   {
     id: 22,
+    article: "022w",
     title: "Девушка в брючном костюме",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -214,6 +236,7 @@ export const products: Product[] = [
   },
   {
     id: 23,
+    article: "023w",
     title: "Девушка в блузка,брюки,куртка",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -224,6 +247,7 @@ export const products: Product[] = [
   },
   {
     id: 24,
+    article: "024w",
     title: "Девушка с оранжевым пальто на руке",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -233,6 +257,7 @@ export const products: Product[] = [
   },
   {
     id: 25,
+    article: "025w",
     title: "Дувушка в мини юбке",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -242,6 +267,7 @@ export const products: Product[] = [
   },
   {
     id: 26,
+    article: "001m",
     title: "Пареньв свитеребелом ",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -251,6 +277,7 @@ export const products: Product[] = [
   },
   {
     id: 27,
+    article: "002m",
     title: "Парень в свитере черном",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -261,6 +288,7 @@ export const products: Product[] = [
 
   {
     id: 28,
+    article: "003m",
     title: "Парень танцор в чорном",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -271,6 +299,7 @@ export const products: Product[] = [
 
   {
     id: 29,
+    article: "004m",
     title: "Парень в джинсовом костюме",
     price: "1500 грн.",
     priceAmount: 1500,
@@ -280,6 +309,7 @@ export const products: Product[] = [
   },
   {
     id: 30,
+    article: "001c",
     title: "Пара в костюмах",
     price: "1500 грн.",
     priceAmount: 1500,

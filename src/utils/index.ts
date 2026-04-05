@@ -1,5 +1,6 @@
 /** Общие утилиты приложения (единая точка импорта: `@/utils`) */
 export { formatPriceUah } from "./formatPrice";
+export { formatArticleDisplay } from "./formatArticle";
 export { SITE_NAME } from "./siteMeta";
 export { useDocumentTitle } from "./useDocumentTitle";
 export { smoothScrollToId } from "./scroll";

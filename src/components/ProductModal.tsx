@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ProductModalProps } from "../types";
-import { formatPriceUah } from "@/utils";
+import { formatArticleDisplay, formatPriceUah } from "@/utils";
 import { validateOrderQuantity } from "../utils/formValidation";
 import ProductCheckoutForm from "./ProductCheckoutForm";
 import ProductOrderForm from "./ProductOrderForm";
@@ -79,6 +79,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId: product.id,
+          article: product.article,
           productTitle: product.title,
           priceLabel: product.price,
           quantity,
@@ -167,6 +168,9 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             </div>
 
             <div className={styles.textCol}>
+              <p className={styles.article}>
+                {formatArticleDisplay(product.article)}
+              </p>
               <h2 className={styles.title}>{product.title}</h2>
               <p className={styles.price}>{product.price}</p>
               <p className={styles.description}>{product.description}</p>

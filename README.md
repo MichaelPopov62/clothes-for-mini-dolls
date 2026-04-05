@@ -22,9 +22,11 @@ src/
     PrivacyPolicyPage.tsx, TermsOfUsePage.tsx — юридические страницы
   components/           — Header, Footer, SocialNetworkLinks, AboutSection, Catalog,
                           ProductCard, ProductModal, ProductOrderForm, ProductCheckoutForm
-  data/products.ts      — каталог (данные в коде)
+  data/products.ts      — каталог (данные в коде), у каждой позиции поле article
   types/                — типы товара и пропсов
-  utils/                — валидация форм, цены, скролл, siteMeta, useDocumentTitle, соцсети
+  utils/                — валидация форм, цены, артикул для UI, скролл, siteMeta, useDocumentTitle, соцсети
+scripts/
+  check-articles.ts     — проверка уникальности и непустоты article (`npm run check:articles`)
 api/
   send-order.ts         — обработчик POST заказа (Vercel Function)
   lib/telegram.ts       — вызов Telegram Bot API (sendMessage)
@@ -36,7 +38,8 @@ public/
 
 - **Стили:** преимущественно `*.module.css` рядом с компонентами, глобально — `src/index.css`.
 - **Алиас `@/`** указывает на `src/` (см. `vite.config.ts`).
-- **Данные каталога:** правки ассортимента — в `src/data/products.ts` и при необходимости в `src/types/product.ts`.
+- **Данные каталога:** правки ассортимента — в `src/data/products.ts` и при необходимости в `src/types/product.ts`. У каждого товара обязательное поле **`article`** (уникальная строка, например `014w` / `002m` / `001c` — суффикс по категории: женское **w**, мужское **m**, парное **c**). После правок каталога желательно выполнить **`npm run check:articles`** (дубликаты и пустые артикулы завершат скрипт с ошибкой).
+- **Отображение артикула на сайте:** подпись вида «арт. 014w» формируется утилитой **`formatArticleDisplay`** (`src/utils/formatArticle.ts`) в карточке каталога, модалке и таблице оформления заказа.
 - **Форма заказа:** логика отправки — `ProductModal.tsx` (`resolveOrderApiUrl`, `fetch`), валидация — `src/utils/formValidation.ts`.
 - **Соцсети и иконки:** `src/utils/socialLinks.ts`, спрайт — `public/assets/icon/symbol-defs.svg`.
 
@@ -48,6 +51,7 @@ public/
 | `npm run dev` | Разработка (Vite, обычно порт 5173) |
 | `npm run dev:vercel` | Тот же фронт + локальные **Vercel Functions** (`/api/*`), нужен [Vercel CLI](https://vercel.com/docs/cli) и привязка проекта |
 | `npm run build` | `tsc -b` + production-сборка в `dist/` |
+| `npm run check:articles` | Проверка: у всех товаров непустой **article** и все артикулы уникальны (скрипт `scripts/check-articles.ts`, нужен пакет **tsx** из devDependencies — после `git pull` при изменении зависимостей выполните **`npm install`**) |
 | `npm run preview` | Просмотр собранного `dist/` |
 | `npm run lint` | ESLint |
 
@@ -58,6 +62,7 @@ public/
 1. Репозиторий подключён к **Vercel** (или деплой через CLI: `vercel`, прод: `vercel --prod`).
 2. В **Project → Settings** заданы **Build Command** `npm run build` и **Output Directory** `dist` (дублируется в `vercel.json`).
 3. После добавления/смены переменных окружения выполните **Redeploy**.
+4. После изменений в **`api/send-order.ts`** (например текст уведомления в Telegram) без нового деплоя в чат уйдёт **старая** версия функции — сделайте **Redeploy**, иначе клиент может слать новые поля JSON, а сервер их не отразит в сообщении.
 
 В **`vercel.json`** задан **rewrite** SPA на `index.html` с исключением **`/api/*`**, чтобы прямые заходы на `/privacy` и `/terms` не отдавали 404.
 
@@ -84,9 +89,9 @@ public/
 ## Как передаётся заказ
 
 1. Пользователь в модалке товара проходит шаги (детали → количество → контакты и согласие) и отправляет форму.
-2. Браузер делает **`fetch`** на URL из `resolveOrderApiUrl()` (по умолчанию **`/api/send-order`**), метод **POST**, тело **JSON**: товар, количество, сумма, имя, телефон, e-mail (см. `ProductModal.tsx` и типы в `api/send-order.ts`).
+2. Браузер делает **`fetch`** на URL из `resolveOrderApiUrl()` (по умолчанию **`/api/send-order`**), метод **POST**, тело **JSON**: `productId`, **`article`**, `productTitle`, `priceLabel`, `quantity`, `lineTotalFormatted`, имя, телефон, e-mail (см. `ProductModal.tsx` и тип `OrderPayload` в `api/send-order.ts`).
 3. **Vercel** направляет запрос в **`api/send-order.ts`**: парсинг тела (в т.ч. Buffer/строка), валидация полей.
-4. Если заданы `TELEGRAM_TOKEN` и `TELEGRAM_CHAT_ID`, сервер вызывает **`sendToTelegram`**: HTTP POST к `https://api.telegram.org/bot<TOKEN>/sendMessage` с текстом заказа.
+4. Если заданы `TELEGRAM_TOKEN` и `TELEGRAM_CHAT_ID`, сервер вызывает **`sendToTelegram`**: HTTP POST к `https://api.telegram.org/bot<TOKEN>/sendMessage` с текстом заказа (в тексте есть **название товара**, строка **«Артикул: …»**, **ID** из каталога, цена, количество, сумма, контакты).
 5. Клиент получает JSON `{ success: true }` или сообщение об ошибке (400 / 502 / 503 и т.д.).
 
 Цепочка: **браузер → Vercel Function → Telegram Bot API → ваш чат**.

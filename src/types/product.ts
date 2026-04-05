@@ -1,5 +1,7 @@
 export type Product = {
   id: number;
+  /** Артикул модели, например 001w / 002m / 001c */
+  article: string;
   title: string;
   /** Отображаемая цена в каталоге и модалке */
   price: string;

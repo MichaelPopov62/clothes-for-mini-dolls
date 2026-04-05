@@ -46,7 +46,7 @@
 
 .table {
   width: 100%;
-  min-width: 520px;
+  min-width: 620px;
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -74,6 +74,13 @@
 .cellTitle {
   max-width: 200px;
   line-height: 1.35;
+}
+
+.cellArticle {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #1f2937;
+  font-weight: 700;
 }
 
 .cellTotal {

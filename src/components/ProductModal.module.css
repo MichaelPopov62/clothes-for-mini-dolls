@@ -158,6 +158,16 @@
   align-items: center;
 }
 
+.article {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1f2937;
+  letter-spacing: 0.02em;
+  text-align: left;
+  width: 100%;
+}
+
 .title {
   margin: 0 0 8px;
   font-size: 20px;
