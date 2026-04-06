@@ -26,7 +26,8 @@ src/
   types/                — типы товара и пропсов
   utils/                — валидация форм, цены, артикул для UI, скролл, siteMeta, useDocumentTitle, соцсети
 scripts/
-  check-articles.ts     — проверка уникальности и непустоты article (`npm run check:articles`)
+  check-articles.ts          — проверка уникальности и непустоты article (`npm run check:articles`)
+  watermark-product-images.ts — текст «MiniModa Studio» (низ по центру, чуть выше края; светлая заливка + тёмная обводка; фикс. кегль) на .webp в `public/images/products` (`npm run watermark:products`, **sharp**)
 api/
   send-order.ts         — обработчик POST заказа (Vercel Function)
   lib/telegram.ts       — вызов Telegram Bot API (sendMessage)
@@ -42,18 +43,18 @@ public/
 - **Отображение артикула на сайте:** подпись вида «арт. 014w» формируется утилитой **`formatArticleDisplay`** (`src/utils/formatArticle.ts`) в карточке каталога, модалке и таблице оформления заказа.
 - **Форма заказа:** логика отправки — `ProductModal.tsx` (`resolveOrderApiUrl`, `fetch`), валидация — `src/utils/formValidation.ts`.
 - **Соцсети и иконки:** `src/utils/socialLinks.ts`, спрайт — `public/assets/icon/symbol-defs.svg`.
+- **Водяной знак на фото каталога:** `npm run watermark:products` — **MiniModa Studio** внизу по центру, **чуть выше края** кадра: **светлая заливка** + **тёмная обводка** (читаемо на белой и тёмной одежде), начертание **600**. Кегль **фиксированный** на обычных фото; на очень мелких файлах уменьшается. **Перезаписывает** все `*.webp` под `public/images/products/`, **кроме** каталога **`master/`** (фото мастера). Сохраните копию оригиналов; повторный запуск наложит второй слой. Запись через `%TEMP%` + `copyFile` (см. выше про Windows).
 
 ## Команды для работы локально
 
-| Команда                  | Назначение                                                                                                                                                                                                                    |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm install`            | Установка зависимостей                                                                                                                                                                                                        |
-| `npm run dev`            | Разработка (Vite, обычно порт 5173)                                                                                                                                                                                           |
-| `npm run dev:vercel`     | Тот же фронт + локальные **Vercel Functions** (`/api/*`), нужен [Vercel CLI](https://vercel.com/docs/cli) и привязка проекта                                                                                                  |
-| `npm run build`          | `tsc -b` + production-сборка в `dist/`                                                                                                                                                                                        |
+| Команда `npm install` | Установка зависимостей |
+| `npm run dev` | Разработка (Vite, обычно порт 5173) |
+| `npm run dev:vercel` | Тот же фронт + локальные **Vercel Functions** (`/api/*`), нужен [Vercel CLI](https://vercel.com/docs/cli) и привязка проекта |
+| `npm run build` | `tsc -b` + production-сборка в `dist/` |
 | `npm run check:articles` | Проверка: у всех товаров непустой **article** и все артикулы уникальны (скрипт `scripts/check-articles.ts`, нужен пакет **tsx** из devDependencies — после `git pull` при изменении зависимостей выполните **`npm install`**) |
-| `npm run preview`        | Просмотр собранного `dist/`                                                                                                                                                                                                   |
-| `npm run lint`           | ESLint                                                                                                                                                                                                                        |
+| `npm run watermark:products` | Водянка на **.webp** в `public/images/products` **без** папки `master/` (зависимость **sharp** в devDependencies); см. раздел выше |
+| `npm run preview` | Просмотр собранного `dist/` |
+| `npm run lint` | ESLint |
 
 **Заказ с `npm run dev`:** Vite проксирует **`/api`** на URL из **`vite.config.ts`** (по умолчанию продакшен `https://clothes-for-mini-dolls.vercel.app`). Если прокси недоступен, задайте **`VITE_ORDER_API_URL`** с полным URL к `…/api/send-order` или используйте **`npm run dev:vercel`** (см. `src/vite-env.d.ts` и `ProductModal.tsx`).
 

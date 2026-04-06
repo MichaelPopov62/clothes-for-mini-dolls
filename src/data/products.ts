@@ -241,7 +241,7 @@ export const products: Product[] = [
     price: "1500 грн.",
     priceAmount: 1500,
     description: "Ручная робота. ",
-    image: "/images/products/women/mannequin-30.webp",
+    image: "/images/products/women/mannequin-42.webp",
 
     category: "women",
   },
