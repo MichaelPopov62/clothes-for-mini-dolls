@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ProductModalProps } from "../types";
 import { formatArticleDisplay, formatPriceUah } from "@/utils";
 import { validateOrderQuantity } from "../utils/formValidation";
@@ -45,14 +45,19 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const [checkoutEmail, setCheckoutEmail] = useState("");
   const [checkoutAgreed, setCheckoutAgreed] = useState(false);
 
-  const resetAllDrafts = () => {
+  const resetAllDrafts = useCallback(() => {
     setOrderQuantityText("1");
     setCheckoutClientName("");
     setCheckoutPhone("");
     setCheckoutEmail("");
     setCheckoutAgreed(false);
     setStep("details");
-  };
+  }, []);
+
+  const handleCheckoutSuccessDismiss = useCallback(() => {
+    resetAllDrafts();
+    onClose();
+  }, [onClose, resetAllDrafts]);
 
   const handleClose = () => {
     resetAllDrafts();
@@ -107,9 +112,6 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
           : "Не удалось отправить заказ. Попробуйте позже.",
       );
     }
-
-    resetAllDrafts();
-    onClose();
   };
 
   return (
@@ -204,6 +206,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
             agreed={checkoutAgreed}
             onAgreedChange={setCheckoutAgreed}
             onSubmitOrder={handleSubmitOrder}
+            onAfterOrderSuccess={handleCheckoutSuccessDismiss}
           />
         )}
       </div>

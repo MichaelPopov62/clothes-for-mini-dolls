@@ -3,6 +3,11 @@ import type { ProductCheckoutFormProps } from "../types";
 import { validateClientName, validateEmail, validatePhone } from "../utils/formValidation";
 import styles from "./ProductCheckoutForm.module.css";
 
+const ORDER_SUCCESS_MESSAGE =
+  "Спасибо за покупку. С Вами свяжутся для уточнения всех условий.";
+/** Пауза, чтобы пользователь успел прочитать сообщение, затем закрытие модалки */
+const ORDER_SUCCESS_DISMISS_MS = 2800;
+
 /** Контакты и согласие перед отправкой заказа */
 const ProductCheckoutForm = ({
   product,
@@ -16,6 +21,7 @@ const ProductCheckoutForm = ({
   agreed,
   onAgreedChange,
   onSubmitOrder,
+  onAfterOrderSuccess,
 }: ProductCheckoutFormProps) => {
   const [touched, setTouched] = useState({
     clientName: false,
@@ -25,13 +31,24 @@ const ProductCheckoutForm = ({
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
+  const successRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (submitError) {
       submitBtnRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
   }, [submitError]);
+
+  useEffect(() => {
+    if (!submitSuccess) return;
+    successRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const t = window.setTimeout(() => {
+      onAfterOrderSuccess();
+    }, ORDER_SUCCESS_DISMISS_MS);
+    return () => window.clearTimeout(t);
+  }, [submitSuccess, onAfterOrderSuccess]);
 
   const nameError = validateClientName(clientName);
   const phoneError = validatePhone(phone);
@@ -64,6 +81,7 @@ const ProductCheckoutForm = ({
     setIsSubmitting(true);
     try {
       await Promise.resolve(onSubmitOrder());
+      setSubmitSuccess(true);
     } catch (err) {
       const msg =
         err instanceof Error && err.message.length > 0
@@ -78,11 +96,23 @@ const ProductCheckoutForm = ({
   return (
     <div className={styles.section}>
       <h2 className={styles.title}>Данные клиента</h2>
-      <button type="button" className={styles.backButton} onClick={onBack}>
-        ← Назад к оформлению заказа
-      </button>
 
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      {submitSuccess ? (
+        <p
+          ref={successRef}
+          className={styles.submitSuccess}
+          role="status"
+          aria-live="polite"
+        >
+          {ORDER_SUCCESS_MESSAGE}
+        </p>
+      ) : (
+        <>
+          <button type="button" className={styles.backButton} onClick={onBack}>
+            ← Назад к оформлению заказа
+          </button>
+
+          <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
@@ -212,6 +242,8 @@ const ProductCheckoutForm = ({
           {isSubmitting ? "Отправка…" : "Отправить заказ"}
         </button>
       </form>
+        </>
+      )}
     </div>
   );
 };

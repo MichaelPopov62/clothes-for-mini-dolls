@@ -38,7 +38,9 @@ export type ProductCheckoutFormProps = {
   onEmailChange: (value: string) => void;
   agreed: boolean;
   onAgreedChange: (value: boolean) => void;
-  /** После успешной отправки модалка закрывается в родителе; при ошибке — throw или rejected Promise */
+  /** При ошибке — throw или rejected Promise */
   onSubmitOrder: () => void | Promise<void>;
+  /** После паузы с сообщением об успехе — сброс черновиков и закрытие модалки */
+  onAfterOrderSuccess: () => void;
 };
 
